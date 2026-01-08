@@ -1,0 +1,61 @@
+Found 10 test cases.
+------------------------------------------------------------
+Testing case1.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case2.cpp...
+case2.cpp:11:18: warning: Uninitialized variable: b [uninitvar]
+    std::cout << b << std::endl;
+                 ^
+case2.cpp:7:14: note: Assuming condition is false
+    while (i < input) {
+             ^
+case2.cpp:11:18: note: Uninitialized variable: b
+    std::cout << b << std::endl;
+                 ^
+------------------------------------------------------------
+Testing case3.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case4.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case5.cpp...
+case5.cpp:12:18: warning: Uninitialized variable: e [uninitvar]
+    std::cout << e << std::endl;
+                 ^
+case5.cpp:5:23: note: Assuming condition is false
+    for (int j = 0; j < input + 1; ++j) {
+                      ^
+case5.cpp:12:18: note: Uninitialized variable: e
+    std::cout << e << std::endl;
+                 ^
+------------------------------------------------------------
+Testing case6.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case7.cpp...
+case7.cpp:5:9: style: Variable 'arr' can be declared as const array [constVariable]
+    int arr[5] = {0, 1, 0, 1, 0};
+        ^
+case7.cpp:10:18: warning: Uninitialized variable: g [uninitvar]
+    std::cout << g << std::endl;
+                 ^
+case7.cpp:7:24: note: Assuming condition is false
+    if (arr[input % 5] == 0) {
+                       ^
+case7.cpp:10:18: note: Uninitialized variable: g
+    std::cout << g << std::endl;
+                 ^
+------------------------------------------------------------
+Testing case8.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case9.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case10.cpp...
+case10.cpp:9:18: error: Uninitialized variable: m [uninitvar]
+    std::cout << m << std::endl;
+                 ^
+------------------------------------------------------------

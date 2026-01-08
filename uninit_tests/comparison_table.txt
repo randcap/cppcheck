@@ -1,0 +1,19 @@
+================================================================================
+| Program    | Ground Truth | Legacy (Check) |   ValueFlow    | Union (Combined) |
+|==============================================================================|
+| case1.cpp  |    Right     |     accept     |     accept     |      accept      |
+| case2.cpp  |    Wrong     |     accept     |     reject     |      reject      |
+| case3.cpp  |    Right     |     accept     |     accept     |      accept      |
+| case4.cpp  |    Right     |     accept     |     accept     |      accept      |
+| case5.cpp  |    Wrong     |     accept     |     reject     |      reject      |
+| case6.cpp  |    Wrong     |     accept     |     accept     |      accept      |
+| case7.cpp  |    Wrong     |     reject     |     reject     |      reject      |
+| case8.cpp  |    Wrong     |     accept     |     accept     |      accept      |
+| case9.cpp  |    Right     |     accept     |     accept     |      accept      |
+| case10.cpp |    Wrong     |     reject     |     reject     |      reject      |
+|==============================================================================|
+| Precision  |              |   1.0 (2/2)    |   1.0 (4/4)    |    1.0 (4/4)     |
+| Recall     |              |  0.33 (2/6)    |  0.67 (4/6)    |   0.67 (4/6)     |
+| F1 score   |              |     0.50       |     0.80       |      0.80        |
+================================================================================
+

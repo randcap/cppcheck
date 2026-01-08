@@ -1,0 +1,39 @@
+Found 10 test cases.
+------------------------------------------------------------
+Testing case1.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case2.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case3.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case4.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case5.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case6.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case7.cpp...
+case7.cpp:5:9: style: Variable 'arr' can be declared as const array [constVariable]
+    int arr[5] = {0, 1, 0, 1, 0};
+        ^
+case7.cpp:10:18: error: Uninitialized variable: g [legacyUninitvar]
+    std::cout << g << std::endl;
+                 ^
+------------------------------------------------------------
+Testing case8.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case9.cpp...
+No issues found.
+------------------------------------------------------------
+Testing case10.cpp...
+case10.cpp:9:18: error: Uninitialized variable: m [legacyUninitvar]
+    std::cout << m << std::endl;
+                 ^
+------------------------------------------------------------

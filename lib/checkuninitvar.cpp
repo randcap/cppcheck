@@ -1,5 +1,5 @@
 /*
- * Cppcheck - A tool for static C/C++ code analysis
+ * Cppcheck - A tool for static C/C++ code analysis.
  * Copyright (C) 2007-2025 Cppcheck team.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -19,6 +19,7 @@
 
 //---------------------------------------------------------------------------
 #include "checkuninitvar.h"
+
 
 #include "astutils.h"
 #include "ctu.h"
@@ -133,7 +134,9 @@ void CheckUninitVar::check()
 
 void CheckUninitVar::checkScope(const Scope* scope, const std::set<std::string> &arrayTypeDefs)
 {
+    
     for (const Variable &var : scope->varlist) {
+        
         if ((mTokenizer->isCPP() && var.type() && !var.isPointer() && var.type()->needInitialization != Type::NeedInitialization::True) ||
             var.isStatic() || var.isExtern() || var.isReference())
             continue;
@@ -1619,72 +1622,99 @@ void CheckUninitVar::valueFlowUninit()
     const SymbolDatabase *symbolDatabase = mTokenizer->getSymbolDatabase();
 
     std::unordered_set<nonneg int> ids;
+
     for (const bool subfunction : {false, true}) {
-        // check every executable scope
         for (const Scope* scope : symbolDatabase->functionScopes) {
             for (const Token* tok = scope->bodyStart; tok != scope->bodyEnd; tok = tok->next()) {
                 if (isUnevaluated(tok)) {
                     tok = tok->linkAt(1);
                     continue;
                 }
+
                 if (ids.count(tok->exprId()) > 0)
                     continue;
+
                 if (!tok->variable() && !tok->isUnaryOp("*") && !tok->isUnaryOp("&"))
                     continue;
+
                 if (Token::Match(tok, "%name% ("))
                     continue;
+
                 const Token* parent = tok->astParent();
                 while (Token::simpleMatch(parent, "."))
                     parent = parent->astParent();
+
                 if (parent && parent->isUnaryOp("&"))
                     continue;
+
                 if (isVoidCast(parent))
                     continue;
+
                 auto v = std::find_if(
                     tok->values().cbegin(), tok->values().cend(), std::mem_fn(&ValueFlow::Value::isUninitValue));
+
                 if (v == tok->values().cend())
                     continue;
+
                 if (v->tokvalue && ids.count(v->tokvalue->exprId()) > 0)
                     continue;
+
                 if (subfunction == (v->path == 0))
                     continue;
+
                 if (v->isInconclusive())
                     continue;
+
                 if (v->indirect > 1 || v->indirect < 0)
                     continue;
+
                 bool uninitderef = false;
+
                 if (tok->variable()) {
                     bool unknown;
                     const bool isarray = tok->variable()->isArray();
+
                     if (isarray && tok->variable()->isMember())
                         continue; // Todo: this is a bailout
+
                     if (isarray && tok->variable()->isStlType() && Token::simpleMatch(tok->astParent(), ".")) {
                         const auto yield = astContainerYield(tok, mSettings->library);
                         if (yield != Library::Container::Yield::AT_INDEX && yield != Library::Container::Yield::ITEM)
                             continue;
                     }
+
                     const bool deref = CheckNullPointer::isPointerDeRef(tok, unknown, *mSettings);
                     uninitderef = deref && v->indirect == 0;
+
                     const bool isleaf = isLeafDot(tok) || uninitderef;
+
                     if (!isleaf && Token::Match(tok->astParent(), ". %name%") &&
                         (tok->astParent()->next()->variable() || tok->astParent()->next()->isEnumerator()))
                         continue;
                 }
+
                 const ExprUsage usage = getExprUsage(tok, v->indirect, *mSettings);
+
                 if (usage == ExprUsage::NotUsed || usage == ExprUsage::Inconclusive)
                     continue;
+
                 if (!v->subexpressions.empty() && usage == ExprUsage::PassedByReference)
                     continue;
+
                 if (usage != ExprUsage::Used) {
                     if (!(Token::Match(tok->astParent(), ". %name% (|[") && uninitderef) &&
                         isVariableChanged(tok, v->indirect, *mSettings))
                         continue;
+
                     bool inconclusive = false;
                     if (isVariableChangedByFunctionCall(tok, v->indirect, *mSettings, &inconclusive) || inconclusive)
                         continue;
                 }
+
                 uninitvarError(tok, *v);
+
                 ids.insert(tok->exprId());
+
                 if (v->tokvalue)
                     ids.insert(v->tokvalue->exprId());
             }
@@ -1799,7 +1829,7 @@ bool CheckUninitVar::analyseWholeProgram(const CTU::FileInfo &ctu, const std::li
 void CheckUninitVar::runChecks(const Tokenizer &tokenizer, ErrorLogger *errorLogger)
 {
     CheckUninitVar checkUninitVar(&tokenizer, &tokenizer.getSettings(), errorLogger);
-    checkUninitVar.valueFlowUninit();
+    // checkUninitVar.valueFlowUninit();
     checkUninitVar.check();
 }
 

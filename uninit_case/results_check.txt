@@ -1,0 +1,96 @@
+Found 10 test cases.
+------------------------------------------------------------
+Testing test_case_1.cpp...
+No issues found.
+------------------------------------------------------------
+Testing test_case_2.cpp...
+No issues found.
+------------------------------------------------------------
+Testing test_case_3.cpp...
+No issues found.
+------------------------------------------------------------
+Testing test_case_4.cpp...
+No issues found.
+------------------------------------------------------------
+Testing test_case_5.cpp...
+No issues found.
+------------------------------------------------------------
+Testing test_case_6.cpp...
+test_case_6.cpp:7:12: warning: Uninitialized variable: x [uninitvar]
+    return x;
+           ^
+test_case_6.cpp:5:17: note: Assuming condition is false
+        if (val == 999) x = 1; // Conditional assignment at depth 2
+                ^
+test_case_6.cpp:7:12: note: Uninitialized variable: x
+    return x;
+           ^
+------------------------------------------------------------
+Testing test_case_7.cpp...
+test_case_7.cpp:16:49: style: Condition 'val==999' is always false [knownConditionTrueFalse]
+                                        if (val == 999) x = 1; // Conditional assignment at depth 10
+                                                ^
+test_case_7.cpp:13:44: note: Assuming that condition 'val<108' is not redundant
+                                while (val < 108) {
+                                           ^
+test_case_7.cpp:14:37: note: val is incremented', new value is 109
+                                    val++;
+                                    ^
+test_case_7.cpp:16:49: note: Condition 'val==999' is always false
+                                        if (val == 999) x = 1; // Conditional assignment at depth 10
+                                                ^
+test_case_7.cpp:26:12: error: Uninitialized variable: x [uninitvar]
+    return x;
+           ^
+------------------------------------------------------------
+Testing test_case_8.cpp...
+test_case_8.cpp:43:129: style: Condition 'val==999' is always false [knownConditionTrueFalse]
+                                                                                                                        if (val == 999) x = 1; // Conditional assignment at depth 30
+                                                                                                                                ^
+test_case_8.cpp:41:128: note: Assuming that condition 'val<129' is not redundant
+                                                                                                                    while (val < 129) {
+                                                                                                                               ^
+test_case_8.cpp:42:121: note: val is incremented', new value is 130
+                                                                                                                        val++;
+                                                                                                                        ^
+test_case_8.cpp:43:129: note: Condition 'val==999' is always false
+                                                                                                                        if (val == 999) x = 1; // Conditional assignment at depth 30
+                                                                                                                                ^
+test_case_8.cpp:73:12: error: Uninitialized variable: x [uninitvar]
+    return x;
+           ^
+------------------------------------------------------------
+Testing test_case_9.cpp...
+test_case_9.cpp:83:249: style: Condition 'val==999' is always false [knownConditionTrueFalse]
+                                                                                                                                                                                                                                                if (val == 999) x = 1; // Conditional assignment at depth 60
+                                                                                                                                                                                                                                                        ^
+test_case_9.cpp:81:248: note: Assuming that condition 'val<159' is not redundant
+                                                                                                                                                                                                                                            while (val < 159) {
+                                                                                                                                                                                                                                                       ^
+test_case_9.cpp:82:241: note: val is incremented', new value is 160
+                                                                                                                                                                                                                                                val++;
+                                                                                                                                                                                                                                                ^
+test_case_9.cpp:83:249: note: Condition 'val==999' is always false
+                                                                                                                                                                                                                                                if (val == 999) x = 1; // Conditional assignment at depth 60
+                                                                                                                                                                                                                                                        ^
+test_case_9.cpp:143:12: error: Uninitialized variable: x [uninitvar]
+    return x;
+           ^
+------------------------------------------------------------
+Testing test_case_10.cpp...
+test_case_10.cpp:136:409: style: Condition 'val==999' is always false [knownConditionTrueFalse]
+                                                                                                                                                                                                                                                                                                                                                                                                                if (val == 999) x = 1; // Conditional assignment at depth 100
+                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+test_case_10.cpp:133:404: note: Assuming that condition 'val<198' is not redundant
+                                                                                                                                                                                                                                                                                                                                                                                                        while (val < 198) {
+                                                                                                                                                                                                                                                                                                                                                                                                                   ^
+test_case_10.cpp:134:397: note: val is incremented', new value is 199
+                                                                                                                                                                                                                                                                                                                                                                                                            val++;
+                                                                                                                                                                                                                                                                                                                                                                                                            ^
+test_case_10.cpp:136:409: note: Condition 'val==999' is always false
+                                                                                                                                                                                                                                                                                                                                                                                                                if (val == 999) x = 1; // Conditional assignment at depth 100
+                                                                                                                                                                                                                                                                                                                                                                                                                        ^
+test_case_10.cpp:236:12: error: Uninitialized variable: x [uninitvar]
+    return x;
+           ^
+------------------------------------------------------------

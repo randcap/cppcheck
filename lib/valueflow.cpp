@@ -4184,9 +4184,12 @@ static void valueFlowAfterAssign(TokenList &tokenlist,
                     return false;
                 });
             }
-            // If assignment copy by value, remove Uninit values..
-            if ((tok->astOperand1()->valueType() && tok->astOperand1()->valueType()->pointer == 0) ||
-                (tok->astOperand1()->variable() && tok->astOperand1()->variable()->isReference() && tok->astOperand1()->variable()->nameToken() == tok->astOperand1()))
+            const bool copyByValue =
+                (tok->astOperand1()->valueType() && tok->astOperand1()->valueType()->pointer == 0) ||
+                (tok->astOperand1()->variable() && tok->astOperand1()->variable()->isReference() &&
+                 tok->astOperand1()->variable()->nameToken() == tok->astOperand1());
+            const bool rhsIsVariable = tok->astOperand2() && tok->astOperand2()->variable();
+            if (copyByValue && !rhsIsVariable)
                 values.remove_if([&](const ValueFlow::Value& value) {
                     return value.isUninitValue();
                 });
@@ -6053,6 +6056,59 @@ static void valueFlowUninit(TokenList& tokenlist, ErrorLogger& errorLogger, cons
     }
 }
 
+static void valueFlowUninitAssign(TokenList& tokenlist,
+                                  const SymbolDatabase& symboldatabase,
+                                  ErrorLogger& errorLogger,
+                                  const Settings& settings,
+                                  const std::set<const Scope*>& skippedFunctions)
+{
+    for (const Scope* scope : symboldatabase.functionScopes) {
+        if (skippedFunctions.count(scope))
+            continue;
+        for (auto* tok = const_cast<Token*>(scope->bodyStart); tok != scope->bodyEnd; tok = tok->next()) {
+            if (!tok->scope()->isExecutable()) {
+                tok = const_cast<Token*>(tok->scope()->bodyEnd);
+                continue;
+            }
+            if (tok->str() != "=")
+                continue;
+            if (tok->astParent() &&
+                !((tok->astParent()->str() == ";" && astIsLHS(tok)) || tok->astParent()->str() == "*"))
+                continue;
+            const Token* lhs = tok->astOperand1();
+            const Token* rhs = tok->astOperand2();
+            if (!lhs || !rhs)
+                continue;
+            if (!lhs->variable() || lhs->exprId() == 0)
+                continue;
+            if (!rhs->variable() || rhs->exprId() == 0)
+                continue;
+            if (rhs->values().empty())
+                continue;
+            std::list<ValueFlow::Value> values;
+            std::string infoPrefix;
+            if (tok->astParent())
+                infoPrefix = "Assignment '" + tok->astParent()->expressionString() + "', assigned value is ";
+            for (const ValueFlow::Value& value : rhs->values()) {
+                if (!value.isUninitValue())
+                    continue;
+                ValueFlow::Value v = value;
+                v.tokvalue = lhs;
+                if (!infoPrefix.empty())
+                    v.errorPath.emplace_back(tok, infoPrefix + v.infoString());
+                values.push_back(std::move(v));
+            }
+            if (values.empty())
+                continue;
+            const Token* endOfVarScope = ValueFlow::getEndOfExprScope(lhs);
+            Token* nextExpression = tok->astParent() ? nextAfterAstRightmostLeaf(tok->astParent()) : tok->next();
+            if (!nextExpression)
+                continue;
+            valueFlowForward(nextExpression, endOfVarScope, lhs, std::move(values), tokenlist, errorLogger, settings);
+        }
+    }
+}
+
 static bool isContainerSizeChanged(const Token* expr,
                                    const Token* start,
                                    const Token* end,
@@ -7379,6 +7435,7 @@ void ValueFlow::setValues(TokenList& tokenlist,
         VFA(valueFlowLifetime(tokenlist, errorLogger, settings)),
         VFA(valueFlowFunctionDefaultParameter(tokenlist, symboldatabase, errorLogger, settings)),
         VFA(valueFlowUninit(tokenlist, errorLogger, settings)),
+        VFA(valueFlowUninitAssign(tokenlist, symboldatabase, errorLogger, settings, skippedFunctions)),
         VFA_CPP(valueFlowAfterMove(tokenlist, symboldatabase, errorLogger, settings)),
         VFA_CPP(valueFlowSmartPointer(tokenlist, errorLogger, settings)),
         VFA_CPP(valueFlowIterators(tokenlist, settings)),

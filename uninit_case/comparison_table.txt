@@ -1,0 +1,18 @@
+| Program          | Ground Truth | Default | ValueFlow | Union  |
+| :--------------- | :----------- | :------ | :-------- | :----- |
+| test_case_1.cpp  | right        | accept  | accept    | accept |
+| test_case_2.cpp  | right        | accept  | accept    | accept |
+| test_case_3.cpp  | right        | accept  | accept    | accept |
+| test_case_4.cpp  | right        | accept  | accept    | accept |
+| test_case_5.cpp  | right        | accept  | accept    | accept |
+| test_case_6.cpp  | wrong        | accept  | reject    | reject |
+| test_case_7.cpp  | wrong        | accept  | reject    | reject |
+| test_case_8.cpp  | wrong        | accept  | reject    | reject |
+| test_case_9.cpp  | wrong        | accept  | reject    | reject |
+| test_case_10.cpp | wrong        | accept  | reject    | reject |
+
+| Metric    | Default | ValueFlow | Union |
+| :-------- | :------ | :-------- | :---- |
+| Precision | N/A     | 1.00      | 1.00  |
+| Recall    | 0.00    | 1.00      | 1.00  |
+| F1 score  | 0.00    | 1.00      | 1.00  |
